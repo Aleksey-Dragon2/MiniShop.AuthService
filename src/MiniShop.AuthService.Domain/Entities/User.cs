@@ -1,41 +1,18 @@
-﻿namespace MiniShop.AuthService.Domain.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace MiniShop.AuthService.Domain.Entities
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        public Guid Id { get; private set; }
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
-        public string Email { get; private set; }
-
-        public string PasswordHash { get; private set; }
-
-        public List<string> Roles { get; private set; } = new();
-
-        public DateTime CreatedAt { get; private set; }
-
-        public User(string email, string passwordHash)
+        public User() { }         
+        public User(string email)
         {
             Id = Guid.NewGuid();
             Email = email;
-            PasswordHash = passwordHash;
+            UserName = email; 
             CreatedAt = DateTime.UtcNow;
-        }
-
-        public void ChangePassword(string newPasswordHash)
-        {
-            PasswordHash = newPasswordHash;
-        }
-
-        public void AddRole(string role)
-        {
-            if (!Roles.Contains(role))
-            {
-                Roles.Add(role);
-            }
-        }
-
-        public void RemoveRole(string role)
-        {
-            Roles.Remove(role);
         }
     }
 }
