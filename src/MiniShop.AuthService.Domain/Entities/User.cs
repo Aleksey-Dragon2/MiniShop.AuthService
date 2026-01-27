@@ -7,11 +7,11 @@ namespace MiniShop.AuthService.Domain.Entities
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
         public User() { }         
-        public User(string email)
+        public User(string email, string userName)
         {
             Id = Guid.NewGuid();
             Email = email;
-            UserName = email; 
+            UserName = userName; 
             CreatedAt = DateTime.UtcNow;
         }
     }
