@@ -1,5 +1,10 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MiniShop.AuthService.Application.Extensions;
+using MiniShop.AuthService.Application.Users.Register;
+using MiniShop.AuthService.Domain.Entities;
+using MiniShop.AuthService.Infrastructure.Database;
 
 namespace MiniShop.AuthService.API
 {
@@ -18,7 +23,18 @@ namespace MiniShop.AuthService.API
 
             builder.Services.AddDbContext<Infrastructure.Database.AuthDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services
+                .AddIdentity<User, IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<AuthDbContext>()
+                .AddDefaultTokenProviders();
+
+
+
+            builder.Services.AddAplication();
+
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
