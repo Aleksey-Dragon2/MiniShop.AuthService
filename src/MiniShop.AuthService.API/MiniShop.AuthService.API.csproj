@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.12">
       <PrivateAssets>all</PrivateAssets>
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MiniShop.AuthService.Application\MiniShop.AuthService.Application.csproj" />
     <ProjectReference Include="..\MiniShop.AuthService.Infrastructure\MiniShop.AuthService.Infrastructure.csproj" />
   </ItemGroup>
 
