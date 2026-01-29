@@ -24,12 +24,16 @@ namespace MiniShop.AuthService.Application.Users.Register
                 throw new ArgumentNullException(nameof(request));
 
             var user = new User(request.Email, request.UserName);
-            var result = await _userManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded)
                 throw new UserRegistrationException(result.Errors);
 
-            return _mapper.Map<RegisterUserResult>(result);
+            return new RegisterUserResult(
+                 Id: user.Id,
+                 UserName: user.UserName,
+                 Email: user.Email
+             );
         }
     }
 }
