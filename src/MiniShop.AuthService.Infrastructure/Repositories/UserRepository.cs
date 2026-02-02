@@ -11,7 +11,7 @@ namespace MiniShop.AuthService.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<User> AddAsync(User user)
+        public async Task<User> CreateAsync(User user)
         {
             await _context.Users.AddAsync(user);
             user.PasswordHash = "";
