@@ -27,6 +27,7 @@ namespace MiniShop.AuthService.API
             builder.Services
                 .AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<AuthDbContext>()
+                .AddSignInManager()
                 .AddDefaultTokenProviders();
 
 
