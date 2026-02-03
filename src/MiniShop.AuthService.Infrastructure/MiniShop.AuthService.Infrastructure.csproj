@@ -18,7 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MiniShop.AuthService.Application\MiniShop.AuthService.Application.csproj" />
     <ProjectReference Include="..\MiniShop.AuthService.Domain\MiniShop.AuthService.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
   </ItemGroup>
 
 </Project>
