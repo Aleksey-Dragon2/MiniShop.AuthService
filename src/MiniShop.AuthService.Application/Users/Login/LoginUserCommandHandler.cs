@@ -4,21 +4,24 @@ using Microsoft.AspNetCore.Identity;
 using MiniShop.AuthService.Application.Users.Results;
 using MiniShop.AuthService.Application.Exceptions;
 using MiniShop.AuthService.Domain.Entities;
+using MiniShop.AuthService.Application.Abstractions.TokenGenerator;
 
 namespace MiniShop.AuthService.Application.Users.Login
 {
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand>
+    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, string>
     {
         private readonly IMapper _mapper;
         private readonly SignInManager<User> _signInManager;
+        private readonly ITokenGenerator _tokenGenerator;
 
-        public LoginUserCommandHandler(IMapper mapper, SignInManager<User> signInManager)
+        public LoginUserCommandHandler(IMapper mapper, SignInManager<User> signInManager, ITokenGenerator tokenGenerator)
         {
             _mapper = mapper;
             _signInManager = signInManager;
+            _tokenGenerator = tokenGenerator;
         }
 
-        public async Task Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
@@ -31,6 +34,8 @@ namespace MiniShop.AuthService.Application.Users.Login
 
             if (!result.Succeeded)
                 throw new UserLoginException();
+
+            return _tokenGenerator.GenerateToken(user);
         }
     }
 }
