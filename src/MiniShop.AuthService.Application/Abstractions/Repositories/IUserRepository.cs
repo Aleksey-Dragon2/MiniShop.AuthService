@@ -1,7 +1,6 @@
-﻿
-using MiniShop.AuthService.Domain.Entities;
+﻿using MiniShop.AuthService.Domain.Entities;
 
-namespace MiniShop.AuthService.Infrastructure.Abstractions
+namespace MiniShop.AuthService.Application.Abstractions.Repositories
 {
     public interface IUserRepository
     {
