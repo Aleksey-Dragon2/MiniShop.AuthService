@@ -3,19 +3,23 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using MiniShop.AuthService.Application.Exceptions;
 using MiniShop.AuthService.Application.Users.Results;
+using MiniShop.AuthService.Application.Abstractions.Services;
 using MiniShop.AuthService.Domain.Entities;
+using MiniShop.AuthService.Domain.Enums;
 
 namespace MiniShop.AuthService.Application.Users.Register
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, RegisterUserResult>
     {
         private readonly IMapper _mapper;
+        private readonly IRoleService _roleService;
         private readonly UserManager<User> _userManager;
 
-        public RegisterUserCommandHandler(IMapper mapper, UserManager<User> userManager) 
+        public RegisterUserCommandHandler(IMapper mapper, IRoleService roleService, UserManager<User> userManager) 
         {
             _mapper = mapper;
             _userManager = userManager;
+            _roleService = roleService;
         }
 
         public async Task<RegisterUserResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -25,9 +29,12 @@ namespace MiniShop.AuthService.Application.Users.Register
 
             var user = new User(request.Email, request.UserName);
             var result = await _userManager.CreateAsync(user, request.Password);
+            
 
             if (!result.Succeeded)
                 throw new UserRegistrationException(result.Errors);
+
+            await _roleService.AssignRoleToUserAsync(user, UserRole.Customer);
 
             return new RegisterUserResult(
                  Id: user.Id,
