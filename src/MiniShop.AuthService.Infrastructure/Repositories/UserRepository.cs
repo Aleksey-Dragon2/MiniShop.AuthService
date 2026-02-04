@@ -1,5 +1,5 @@
 ﻿using MiniShop.AuthService.Domain.Entities;
-using MiniShop.AuthService.Infrastructure.Abstractions;
+using MiniShop.AuthService.Application.Abstractions.Repositories;
 using MiniShop.AuthService.Infrastructure.Database;
 
 namespace MiniShop.AuthService.Infrastructure.Repositories
