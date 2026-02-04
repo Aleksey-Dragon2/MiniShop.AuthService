@@ -2,15 +2,17 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MiniShop.AuthService.Application.Extensions;
-using MiniShop.AuthService.Application.Users.Register;
 using MiniShop.AuthService.Domain.Entities;
 using MiniShop.AuthService.Infrastructure.Database;
-
+using MiniShop.AuthService.Infrastructure.Extensions;
+using MiniShop.AuthService.Infrastructure.Implementations.TokenGenerator;
+using MiniShop.AuthService.Infrastructure.Seed;
+using MiniShop.AuthService.API.Extensions;
 namespace MiniShop.AuthService.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +32,24 @@ namespace MiniShop.AuthService.API
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
+            builder.Services.Configure<AuthOptions>(
+                builder.Configuration.GetSection("AuthOptions"));
 
 
-            builder.Services.AddAplication();
+            builder.Services.AddAplication()
+                .AddInfrastructure()
+                .AddPresentation(builder.Configuration);
 
             var app = builder.Build();
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider
+                    .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+                await RoleSedeer.SeedAsync(roleManager);
+            }
 
 
             // Configure the HTTP request pipeline.
@@ -46,8 +61,8 @@ namespace MiniShop.AuthService.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
