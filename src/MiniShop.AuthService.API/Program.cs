@@ -18,30 +18,11 @@ namespace MiniShop.AuthService.API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddDbContext<Infrastructure.Database.AuthDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            builder.Services
-                .AddIdentity<User, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<AuthDbContext>()
-                .AddSignInManager()
-                .AddDefaultTokenProviders();
-
-            builder.Services.Configure<AuthOptions>(
-                builder.Configuration.GetSection("AuthOptions"));
-
-
             builder.Services.AddAplication()
-                .AddInfrastructure()
+                .AddInfrastructure(builder.Configuration)
                 .AddPresentation(builder.Configuration);
 
             var app = builder.Build();
-
 
             using (var scope = app.Services.CreateScope())
             {
@@ -50,7 +31,6 @@ namespace MiniShop.AuthService.API
 
                 await RoleSedeer.SeedAsync(roleManager);
             }
-
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
