@@ -19,7 +19,7 @@ namespace MiniShop.AuthService.Infrastructure.Implementations.TokenGenerator
             _userManager = userManager;
         }
 
-        public string GenerateToken(User user)
+        public async Task<string> GenerateTokenAsync(User user)
         {
             var claims = new List<Claim>
             {
@@ -27,7 +27,7 @@ namespace MiniShop.AuthService.Infrastructure.Implementations.TokenGenerator
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
             };
-            var roles = _userManager.GetRolesAsync(user).Result;
+            var roles = await _userManager.GetRolesAsync(user);
             foreach(var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
