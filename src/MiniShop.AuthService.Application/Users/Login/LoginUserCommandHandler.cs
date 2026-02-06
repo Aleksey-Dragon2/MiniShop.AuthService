@@ -1,8 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Security.Authentication;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using MiniShop.AuthService.Application.Users.Results;
-using MiniShop.AuthService.Application.Exceptions;
 using MiniShop.AuthService.Domain.Entities;
 using MiniShop.AuthService.Application.Abstractions.TokenGenerator;
 
@@ -25,7 +24,11 @@ namespace MiniShop.AuthService.Application.Users.Login
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
+
             var user = await _signInManager.UserManager.FindByEmailAsync(request.Email);
+            if (user is null)
+                throw new AuthenticationException($"User with email {request.Email} not found");
+
             var result = await _signInManager.CheckPasswordSignInAsync(
                 user,
                 request.Password,
@@ -33,9 +36,9 @@ namespace MiniShop.AuthService.Application.Users.Login
             );
 
             if (!result.Succeeded)
-                throw new UserLoginException();
+                throw new AuthenticationException("Invalid password or email");
 
-            return _tokenGenerator.GenerateToken(user);
+            return await _tokenGenerator.GenerateTokenAsync(user);
         }
     }
 }
