@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MiniShop.AuthService.API.Middleware;
 using System.Security.Claims;
 using System.Text;
 
@@ -10,6 +12,8 @@ namespace MiniShop.AuthService.API.Extensions
     {
         public static IServiceCollection AddPresentation(this IServiceCollection services, IConfiguration configuration)
         {
+
+            services.AddTransient<ExceptionHandlingMiddleware>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>

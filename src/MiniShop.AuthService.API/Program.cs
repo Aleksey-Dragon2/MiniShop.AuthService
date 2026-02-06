@@ -8,6 +8,7 @@ using MiniShop.AuthService.Infrastructure.Extensions;
 using MiniShop.AuthService.Infrastructure.Implementations.TokenGenerator;
 using MiniShop.AuthService.Infrastructure.Seed;
 using MiniShop.AuthService.API.Extensions;
+using MiniShop.AuthService.API.Middleware;
 namespace MiniShop.AuthService.API
 {
     public class Program
@@ -38,14 +39,12 @@ namespace MiniShop.AuthService.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
-
             app.Run();
         }
     }
