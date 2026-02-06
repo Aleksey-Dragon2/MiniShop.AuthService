@@ -24,8 +24,4 @@
     <ProjectReference Include="..\MiniShop.AuthService.Domain\MiniShop.AuthService.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Abstractions\" />
-  </ItemGroup>
-
 </Project>
