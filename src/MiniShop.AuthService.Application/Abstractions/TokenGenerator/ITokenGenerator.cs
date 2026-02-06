@@ -4,6 +4,6 @@ namespace MiniShop.AuthService.Application.Abstractions.TokenGenerator
 {
     public interface ITokenGenerator
     {
-        string GenerateToken(User user);
+        Task<string> GenerateTokenAsync(User user);
     }
 }
