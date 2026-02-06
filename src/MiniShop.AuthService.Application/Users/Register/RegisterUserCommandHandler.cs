@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using MiniShop.AuthService.Application.Exceptions;
 using MiniShop.AuthService.Application.Users.Results;
 using MiniShop.AuthService.Application.Abstractions.Services;
 using MiniShop.AuthService.Domain.Entities;
 using MiniShop.AuthService.Domain.Enums;
+using MiniShop.AuthService.Domain.Exceptions;
 
 namespace MiniShop.AuthService.Application.Users.Register
 {
@@ -27,13 +27,13 @@ namespace MiniShop.AuthService.Application.Users.Register
             if(request is null)
                 throw new ArgumentNullException(nameof(request));
 
+            var userExists = await _userManager.FindByEmailAsync(request.Email);
+            if (userExists != null)
+                throw new UserAlreadyExistsException(request.Email);
+
             var user = new User(request.Email, request.UserName);
             var result = await _userManager.CreateAsync(user, request.Password);
             
-
-            if (!result.Succeeded)
-                throw new UserRegistrationException(result.Errors);
-
             await _roleService.AssignRoleToUserAsync(user, UserRole.Customer);
 
             return new RegisterUserResult(
